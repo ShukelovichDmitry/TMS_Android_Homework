@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">TMS_Android_Homework</string>
+    <string name="app_name">TeachMeSkills</string>
+    <string name="search_tooltip">Найти отправление</string>
+    <string name="send">Отправить поссылку</string>
+    <string name="post_office">Найти отделение</string>
+    <string name="sign_text">Войдите или зарегистрируйтесь, чтобы получить доступ к расширенному функционалу</string>
+    <string name="sign_in_text">Войти</string>
+    <string name="sign_up_text">Регистрация</string>
+    <string name="frequently_asked">Частые вопросы</string>
+    <string name="question1">Где моя поссылка?</string>
+    <string name="question2">Как проходит торможение оформления?</string>
+    <string name="question3">Как отправить посылку?</string>
+    <string name="question4">Как получить посылку</string>
+    <string name="discont_text">Акции</string>
+    <string name="company_name">Boxberry</string>
 </resources>
