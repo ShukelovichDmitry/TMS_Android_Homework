@@ -6,34 +6,4 @@
     </style>
 
     <style name="Theme.TMS_Android_Homework" parent="Base.Theme.TMS_Android_Homework" />
-
-    <style name="Toolbar">
-        <item name="android:background">@color/red</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:padding">20dp</item>
-    </style>
-
-    <style name="ToolbarButton">
-        <item name="android:backgroundTint">@color/white</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:padding">10dp</item>
-        <item name="cornerRadius">10dp</item>
-        <item name="android:textAlignment">viewStart</item>
-    </style>
-
-    <style name="SignInButton">
-        <item name="android:backgroundTint">@color/red</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="cornerRadius">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
-    </style>
-
-    <style name="SignUpButton">
-        <item name="android:backgroundTint">@color/white</item>
-        <item name="android:textColor">@color/red</item>
-        <item name="cornerRadius">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="strokeColor">@color/red</item>
-        <item name="strokeWidth">2dp</item>
-    </style>
 </resources>
