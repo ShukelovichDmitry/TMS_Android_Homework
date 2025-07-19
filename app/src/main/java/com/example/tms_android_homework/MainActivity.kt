@@ -18,10 +18,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.pager.adapter = MyAdapter(this)
-        TabLayoutMediator(binding.tabs, binding.pager) { tab, position ->
-            tab.text = "Tab #$position"
-        }.attach()
+        val myAdapter = MyAdapter(this)
+        binding.pager.adapter = myAdapter
+        binding.addFragment.setOnClickListener {
+            myAdapter.addFragment()
+            TabLayoutMediator(binding.tabs, binding.pager) { tab, position ->
+                tab.text = "Tab #$position"
+            }.attach()
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
