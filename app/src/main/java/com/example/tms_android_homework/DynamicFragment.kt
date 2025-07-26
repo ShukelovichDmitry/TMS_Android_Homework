@@ -1,5 +1,6 @@
 package com.example.tms_android_homework
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +17,7 @@ class DynamicFragment(private val pageNumber: Int): Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDynamicBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         binding.fragmentText.text = "Fragment #$pageNumber"
+        return binding.root
     }
 }

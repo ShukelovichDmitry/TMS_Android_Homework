@@ -3,19 +3,29 @@ package com.example.tms_android_homework
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.adapter.FragmentViewHolder
+import java.util.LinkedList
 
 class MyAdapter(fragment: FragmentActivity) : FragmentStateAdapter(fragment) {
-    private val fragmentList = ArrayList<Fragment>()
+    private var fragmentCount = 1
 
     override fun getItemCount(): Int {
-        return fragmentList.size
+        return fragmentCount
     }
 
     override fun createFragment(position: Int): Fragment {
-        return fragmentList.get(position)
+        return DynamicFragment(position)
     }
 
-    fun addFragment() {
-        fragmentList.add(DynamicFragment(fragmentList.size))
+    fun addFragment(): Boolean {
+        fragmentCount++
+        return true
+    }
+
+    fun deleteLastFragment(): Boolean {
+        if (fragmentCount == 1)
+            return false
+        fragmentCount--
+        return true
     }
 }
