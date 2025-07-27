@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Snackbar.make(binding.root, "Введите текст в поле для ввода", Snackbar.LENGTH_SHORT).show()
             }
+
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

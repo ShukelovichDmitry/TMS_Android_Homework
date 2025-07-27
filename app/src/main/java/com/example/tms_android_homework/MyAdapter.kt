@@ -38,6 +38,7 @@ class MyAdapter(val itemList: MutableList<String>): RecyclerView.Adapter<MyAdapt
     fun addItem(str: String) {
         itemList.add(str)
         notifyItemInserted(itemList.size - 1)
+
     }
 
     fun removeItem(position: Int) {
