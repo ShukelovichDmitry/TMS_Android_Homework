@@ -2,11 +2,12 @@ package com.example.tms_android_homework
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tms_android_homework.databinding.LayoutItemBinding
-import com.google.android.material.snackbar.Snackbar
 
-class MyAdapter(val itemList: MutableList<String>): RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+class MyAdapter(private val myViewModel: MyViewModel): RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+    private var itemList: List<String> = myViewModel.listState.value!!
 
     class MyViewHolder(private val binding: LayoutItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun onBind(str: String, removeAction: ()->Unit) {
@@ -31,19 +32,14 @@ class MyAdapter(val itemList: MutableList<String>): RecyclerView.Adapter<MyAdapt
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.onBind(itemList[position], { removeItem(position) })
+        holder.onBind(itemList[position], { myViewModel.removeItem(position) })
 
     }
 
-    fun addItem(str: String) {
-        itemList.add(str)
-        notifyItemInserted(itemList.size - 1)
-
-    }
-
-    fun removeItem(position: Int) {
-        itemList.removeAt(position)
-        notifyItemRemoved(position)
+    fun updateList(newItemList: List<String>) {
+        //itemList.removeAt(position)
+        itemList = newItemList
+        notifyDataSetChanged()
     }
 
 }
