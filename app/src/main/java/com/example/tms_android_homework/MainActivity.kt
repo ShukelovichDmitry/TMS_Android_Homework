@@ -9,11 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
 import com.example.tms_android_homework.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -30,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         binding.list.adapter = myAdapter
         binding.list.layoutManager = LinearLayoutManager(this)
 
-        myViewModel.listState.observe(this, Observer { list ->
+        myViewModel.listLiveData.observe(this, Observer { list ->
             myAdapter.updateList(list)
             if (myAdapter.itemCount > 0) {
                 binding.noDataText.visibility = View.GONE
@@ -44,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         binding.addItem.setOnClickListener {
             val str = binding.newItemText.text.toString()
             if (str != "") {
-                //myAdapter.addItem(str)
                 myViewModel.addItem(str)
                 Snackbar.make(binding.root, "Добавлен новый элемент", Snackbar.LENGTH_SHORT).show()
             } else {

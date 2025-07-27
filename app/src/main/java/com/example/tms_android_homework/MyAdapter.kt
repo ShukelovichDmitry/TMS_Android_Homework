@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tms_android_homework.databinding.LayoutItemBinding
 
 class MyAdapter(private val myViewModel: MyViewModel): RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
-    private var itemList: List<String> = myViewModel.listState.value!!
+    private var itemList: List<String> = myViewModel.listLiveData.value!!
 
     class MyViewHolder(private val binding: LayoutItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun onBind(str: String, removeAction: ()->Unit) {
@@ -37,7 +37,6 @@ class MyAdapter(private val myViewModel: MyViewModel): RecyclerView.Adapter<MyAd
     }
 
     fun updateList(newItemList: List<String>) {
-        //itemList.removeAt(position)
         itemList = newItemList
         notifyDataSetChanged()
     }
