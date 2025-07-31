@@ -2,20 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp">
+    android:padding="5dp"
+    android:background="@drawable/list_item"
+    android:orientation="horizontal"
+    android:gravity="center">
 
     <TextView
-        android:id="@+id/itemText"
-        android:background="@drawable/list_item"
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_weight="1"/>
-
-    <ImageButton
-        android:id="@+id/delete_item"
+        android:id="@+id/note_title"
+        android:textSize="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/delete_24"
-        android:background="@color/white"/>
+        android:text="Title"
+        android:layout_weight="1"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow_right_24" />
 
 </LinearLayout>
