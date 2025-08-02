@@ -1,4 +1,4 @@
-package com.example.tms_android_homework
+package com.example.tms_android_homework.subtask2
 
 open class Bird {
 }

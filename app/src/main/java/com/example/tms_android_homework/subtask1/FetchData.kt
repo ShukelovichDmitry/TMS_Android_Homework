@@ -1,8 +1,11 @@
-package com.example.tms_android_homework
+package com.example.tms_android_homework.subtask1
 
-class FetchData {
-    private val userManager = UserManager()
-    private val apiManager = ApiManager()
+import com.example.tms_android_homework.subtask3.IApiManager
+
+class FetchData(
+    private val userManager: IUserManager,
+    private val apiManager: IApiManager
+) {
 
     fun fetch(userName: String): String {
         var data: String
