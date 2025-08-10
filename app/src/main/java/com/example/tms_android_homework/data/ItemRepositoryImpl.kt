@@ -3,9 +3,11 @@ package com.example.tms_android_homework.data
 import com.example.tms_android_homework.domain.ItemRepository
 
 class ItemRepositoryImpl(private val dataSource: DataSource): ItemRepository {
-    override fun addItem(item: Item) {
-        dataSource.addItem(item)
+    private var _lastId = 0
 
+    override fun addItem(item: Item) {
+        _lastId = item.id
+        dataSource.addItem(item)
     }
 
     override fun getItem(position: Int): Item {
@@ -18,5 +20,9 @@ class ItemRepositoryImpl(private val dataSource: DataSource): ItemRepository {
 
     override fun getItemsCount(): Int {
         return dataSource.getItemsCount()
+    }
+
+    override fun getLastId(): Int {
+        return _lastId
     }
 }

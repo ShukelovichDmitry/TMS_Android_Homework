@@ -7,4 +7,5 @@ interface ItemRepository {
     fun getItem(position: Int): Item
     fun getItems(): List<Item>
     fun getItemsCount(): Int
+    fun getLastId(): Int
 }

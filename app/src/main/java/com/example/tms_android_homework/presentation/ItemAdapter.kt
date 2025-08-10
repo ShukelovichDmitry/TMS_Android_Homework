@@ -8,7 +8,7 @@ import com.example.tms_android_homework.domain.models.ItemTitleModel
 import com.example.tms_android_homework.presentation.listeners.ItemClickListener
 
 class ItemAdapter(
-    private val items: List<ItemTitleModel>,
+    private var items: List<ItemTitleModel>,
     private val itemClickListener: ItemClickListener,
 ) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
@@ -31,4 +31,9 @@ class ItemAdapter(
         holder.bind(position, items[position])
 
     override fun getItemCount(): Int = items.size
+
+    fun updateList(newItems: List<ItemTitleModel>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
 }

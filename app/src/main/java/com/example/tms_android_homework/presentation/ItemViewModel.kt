@@ -3,11 +3,16 @@ package com.example.tms_android_homework.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.tms_android_homework.domain.models.ItemDetailModel
 import com.example.tms_android_homework.domain.models.ItemTitleModel
 import com.example.tms_android_homework.domain.usecase.AddItemUseCase
 import com.example.tms_android_homework.domain.usecase.GetItemUseCase
 import com.example.tms_android_homework.domain.usecase.GetItemsUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.isActive
+import kotlinx.coroutines.launch
 
 class ItemViewModel(
     private val addItem: AddItemUseCase,
@@ -15,28 +20,38 @@ class ItemViewModel(
     private val getItems: GetItemsUseCase
 ): ViewModel() {
 
-    private val _itemList = MutableLiveData(getItems.invoke())
-    val itemList: LiveData<List<ItemTitleModel>>
+    private val _itemList = MutableStateFlow(getItems.invoke()) //MutableLiveData(getItems.invoke())
+    val itemList: StateFlow<List<ItemTitleModel>> //LiveData<List<ItemTitleModel>>
         get() = _itemList
 
-    private val _openAdd = MutableLiveData<Boolean>()
-    val openAdd: LiveData<Boolean>
-        get() = _openAdd
-
-    private val _selectedItem = MutableLiveData<ItemDetailModel>()
-    val selectedItem: LiveData<ItemDetailModel>
+    private val _selectedItem = MutableStateFlow<ItemDetailModel?>(null)//MutableLiveData<ItemDetailModel>()
+    val selectedItem: StateFlow<ItemDetailModel?>
         get() = _selectedItem
 
-    fun openItemDetail(position: Int) {
-        _selectedItem.value = getItem.invoke(position)
+    private val _isSaveBtnActive = MutableStateFlow(false)
+    val isSaveBtnActive: StateFlow<Boolean>
+        get() = _isSaveBtnActive
+
+    fun selectItemDetail(position: Int) {
+        viewModelScope.launch {
+            _selectedItem.emit(getItem.invoke(position))
+        }
     }
 
-    fun openAddItem() {
-        _openAdd.value = true
+    fun addItem(title: String, description: String) {
+        viewModelScope.launch {
+            addItem.invoke(ItemDetailModel(title, description))
+            _itemList.emit(getItems.invoke())
+        }
     }
 
-    fun addItem(newItem: ItemDetailModel) {
-        addItem.invoke(newItem)
-        _itemList.value = getItems.invoke()
+    fun updateIsSaveBtnActive(title: String, description: String) {
+        viewModelScope.launch {
+            if (title.isNotEmpty() && description.isNotEmpty() && !_isSaveBtnActive.value) {
+                _isSaveBtnActive.emit(true)
+            } else if ((title.isEmpty() || description.isEmpty()) && _isSaveBtnActive.value) {
+                _isSaveBtnActive.emit(false)
+            }
+        }
     }
 }
