@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -39,6 +40,20 @@ android {
 }
 
 dependencies {
+    //gson
+    implementation("com.google.code.gson:gson:2.8.8")
+
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    //gson to convert(serialize) api response to our kotlin data models
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    //api logger
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    //glide - for images
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
+    // Activity KTX (for by viewModels())
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

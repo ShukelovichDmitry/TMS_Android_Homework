@@ -1,77 +1,91 @@
 package com.example.tms_android_homework.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.tms_android_homework.R
-import com.example.tms_android_homework.data.DataSourceImpl
-import com.example.tms_android_homework.data.ItemRepositoryImpl
-import com.example.tms_android_homework.domain.models.ItemDetailModel
-import com.example.tms_android_homework.domain.usecase.AddItemUseCase
-import com.example.tms_android_homework.domain.usecase.GetItemUseCase
-import com.example.tms_android_homework.domain.usecase.GetItemsUseCase
-import com.example.tms_android_homework.presentation.listeners.AddItemClickListener
-import com.example.tms_android_homework.presentation.listeners.ItemClickListener
-import com.example.tms_android_homework.presentation.listeners.SaveItemClickListener
+import com.example.tms_android_homework.data.NoteRepositoryImpl
+import com.example.tms_android_homework.data.RetrofitInstance
+import com.example.tms_android_homework.domain.usecase.AddNoteUseCase
+import com.example.tms_android_homework.domain.usecase.DeleteNoteUseCase
+import com.example.tms_android_homework.domain.usecase.EditNoteUseCase
+import com.example.tms_android_homework.domain.usecase.GetNotesUseCase
+import com.example.tms_android_homework.presentation.listeners.BtnClickListener
+import com.example.tms_android_homework.presentation.listeners.AddNoteClickListener
+import com.example.tms_android_homework.presentation.listeners.DeleteNoteClickListener
+import com.example.tms_android_homework.presentation.listeners.SaveNoteClickListener
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 
 class MainActivity : AppCompatActivity() {
+
+    val CoroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+        println("Возникло исключение в MainActivity. $exception")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val itemViewModel = ItemViewModel(
-            addItem = AddItemUseCase(ItemRepositoryImpl(DataSourceImpl)),
-            getItem = GetItemUseCase(ItemRepositoryImpl(DataSourceImpl)),
-            getItems = GetItemsUseCase(ItemRepositoryImpl(DataSourceImpl))
+        val noteViewModel = NoteViewModel(
+            addNote = AddNoteUseCase(NoteRepositoryImpl(RetrofitInstance)),
+            getNotes = GetNotesUseCase(NoteRepositoryImpl(RetrofitInstance)),
+            editNote = EditNoteUseCase(NoteRepositoryImpl(RetrofitInstance)),
+            deleteNote = DeleteNoteUseCase(NoteRepositoryImpl(RetrofitInstance)),
         )
 
-        itemViewModel.itemList.observe(this, Observer { list ->
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container,
-                    ListFragment(
-                        list,
-                        object : ItemClickListener {
-                            override fun onClick(position: Int) {
-                                itemViewModel.openItemDetail(position)
-                            }
-                        },
-                        object : AddItemClickListener {
-                            override fun onClick() {
-                                itemViewModel.openAddItem()
-                            }
-                        }
-                    )
-                )
-                .commit()
-        })
+        val addFragment = AddFragment(
+            object : AddNoteClickListener {
+                override fun onClick(title: String, description: String, imageUrl: String) {
+                    supportFragmentManager.popBackStack()
+                    noteViewModel.addNote(title, description, imageUrl)
+                }
+            }
+        )
 
-        itemViewModel.openAdd.observe(this, Observer {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container,
-                    AddFragment(
-                        object : SaveItemClickListener {
-                            override fun onClick(title: String, description: String) {
-                                itemViewModel.addItem(ItemDetailModel(title, description))
-                            }
-                        }
-                    )
-                )
-                .addToBackStack(null)
-                .commit()
-        })
+        val listFragment = ListFragment(
+            noteViewModel.noteList.value,
+            object : BtnClickListener {
+                override fun onClick() {
+                    noteViewModel.getNotes()
+                }
+            },
+            object : BtnClickListener {
+                override fun onClick() {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, addFragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+            },
+            object : SaveNoteClickListener {
+                override fun onClick(id: String, title: String, descriptor: String, imageUrl: String) {
+                    noteViewModel.editNote(id, title, descriptor, imageUrl)
+                }
+            },
+            object : DeleteNoteClickListener {
+                override fun onClick(id: String) {
+                    noteViewModel.deleteNote(id)
+                }
+            }
+        )
 
-        itemViewModel.selectedItem.observe(this, Observer { selectedItem ->
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, DetailFragment(selectedItem))
-                .addToBackStack(null)
-                .commit()
-        })
+        lifecycleScope.launch(CoroutineExceptionHandler) {
+            noteViewModel.noteList.collect { list ->
+                listFragment.updateList(list)
+            }
+        }
+
+        lifecycleScope.launch(CoroutineExceptionHandler) {
+            noteViewModel.msg.collect { msg ->
+                Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, listFragment)
+            .commit()
 
     }
 }

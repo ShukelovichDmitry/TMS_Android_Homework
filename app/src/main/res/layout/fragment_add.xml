@@ -6,22 +6,40 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/editTitle"
+        android:id="@+id/titleEdit"
         android:hint="Название"
+        android:imeOptions="flagForceAscii"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"/>
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        />
+
     <EditText
-        android:id="@+id/editDescription"
-        android:hint="Описание"
+        android:id="@+id/imageUrlEdit"
+        android:hint="Ссылка на изображение"
+        android:imeOptions="flagForceAscii"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textUri"/>
+
+    <EditText
+        android:id="@+id/descriptionEdit"
+        android:hint="Описание"
+        android:imeOptions="flagForceAscii"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:inputType="textMultiLine"
+        android:gravity="top"
         android:layout_marginTop="12dp" />
 
     <Button
-        android:id="@+id/buttonSave"
+        android:id="@+id/saveNoteBtn"
         android:text="Сохранить"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

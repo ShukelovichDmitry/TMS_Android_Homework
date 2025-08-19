@@ -1,5 +1,5 @@
 package com.example.tms_android_homework.presentation.listeners
 
-interface AddItemClickListener {
+interface BtnClickListener {
     fun onClick()
 }
