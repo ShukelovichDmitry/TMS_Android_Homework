@@ -15,8 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TMS_Android_Homework">
         <activity
-            android:name=".MainActivity"
+            android:name=".note.presentation.MainActivity"
             android:exported="true">
+        </activity>
+        <activity
+            android:name=".onboarding.presentation.OnboardingActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -4,19 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.tms_android_homework.MainActivity
-import com.example.tms_android_homework.note.data.Note
+import com.example.tms_android_homework.R
 import com.example.tms_android_homework.databinding.FragmentListBinding
+import com.example.tms_android_homework.nbrb.presentation.NbrbFragment
 import com.example.tms_android_homework.note.presentation.listeners.DeleteNoteClickListener
 import com.example.tms_android_homework.note.presentation.listeners.SaveNoteClickListener
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ListFragment : Fragment() {
 
-    companion object {
-        val NOTES = "NOTES"
-    }
+    private val noteViewModel: NoteViewModel by viewModels()
 
     private var binding: FragmentListBinding? = null
 
@@ -34,35 +38,52 @@ class ListFragment : Fragment() {
             val noteAdapter = NoteAdapter(
                 object: SaveNoteClickListener {
                     override fun onClick(id: String, title: String, description: String, imageUrl: String) {
-                        (requireActivity() as MainActivity).saveEditNote(id, title, description, imageUrl)
+                        noteViewModel.editNote(id, title, description, imageUrl)
                     }
                 },
                 object: DeleteNoteClickListener {
                     override fun onClick(id: String) {
-                        (requireActivity() as MainActivity).deleteNote(id)
+                        noteViewModel.deleteNote(id)
                     }
                 }
             )
             binding.recyclerView.adapter = noteAdapter
             binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-            (requireActivity() as MainActivity).getNotes()
+            noteViewModel.getNotes()
+
+            lifecycleScope.launch {
+                noteViewModel.msg.collect { msg ->
+                    if (msg.isEmpty()) return@collect
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            lifecycleScope.launch {
+                noteViewModel.noteList.collect{ list ->
+                    noteAdapter.updateList(list)
+                }
+            }
 
             binding.fabAdd.setOnClickListener {
-                (requireActivity() as MainActivity).goToAddFragment()
+                goToNextScreen(AddFragment())
+            }
+
+            binding.fabSync.setOnClickListener {
+                noteViewModel.sync()
             }
 
             binding.goToRates.setOnClickListener {
-                (requireActivity() as MainActivity).goToNbrbFragment()
-            }
-
-            parentFragmentManager.setFragmentResultListener(NOTES, this) { _, bundle ->
-                val newList = bundle.getParcelableArrayList(NOTES, Note::class.java)
-                newList?.let { newList ->
-                    noteAdapter.updateList(newList)
-                }
+                goToNextScreen(NbrbFragment())
             }
         }
+    }
+
+    private fun goToNextScreen(fragment: Fragment) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onDestroy() {

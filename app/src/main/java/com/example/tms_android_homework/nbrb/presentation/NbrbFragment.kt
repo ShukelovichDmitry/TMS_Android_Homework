@@ -5,17 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.tms_android_homework.MainActivity
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.tms_android_homework.databinding.FragmentNbrbBinding
-import com.example.tms_android_homework.note.data.Note
-import com.example.tms_android_homework.note.presentation.ListFragment.Companion.NOTES
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class NbrbFragment: Fragment() {
-    companion object {
-        val RATES = "RATES"
-    }
 
     private var binding: FragmentNbrbBinding? = null
+
+    private val nbrbViewModel: NbrbViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
@@ -25,9 +26,11 @@ class NbrbFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (requireActivity() as MainActivity).getRates()
-        parentFragmentManager.setFragmentResultListener(RATES, this) { _, bundle ->
-            binding?.ratesText?.text = bundle.getString(RATES).orEmpty()
+        nbrbViewModel.getRates()
+        lifecycleScope.launch {
+            nbrbViewModel.rateJSON.collect { json ->
+                binding?.ratesText?.text = json
+            }
         }
     }
 

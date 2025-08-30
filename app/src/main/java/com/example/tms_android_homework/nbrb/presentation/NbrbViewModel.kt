@@ -20,7 +20,7 @@ class NbrbViewModel @Inject constructor(
     private val getRates: GetRatesUseCase
 ): ViewModel() {
 
-    val CoroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         println("Возникло исключение в NbrbViewModel. $exception")
     }
 
@@ -28,12 +28,9 @@ class NbrbViewModel @Inject constructor(
     val rateJSON = _rateJSON.asStateFlow()
 
     fun getRates() {
-        viewModelScope.launch(CoroutineExceptionHandler) {
+        viewModelScope.launch(coroutineExceptionHandler) {
             getRates.invoke()?.let { json ->
-                _rateJSON.emitAll(flow {
-                    emit("Получение данных")
-                    emit(json)
-                })
+                _rateJSON.emit(json)
             }
         }
     }

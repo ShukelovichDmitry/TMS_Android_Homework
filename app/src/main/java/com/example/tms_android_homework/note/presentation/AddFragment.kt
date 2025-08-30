@@ -5,16 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.example.tms_android_homework.MainActivity
 import com.example.tms_android_homework.R
 import com.example.tms_android_homework.databinding.FragmentAddBinding
 import com.example.tms_android_homework.note.presentation.listeners.UrlChangedListener
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddFragment: Fragment() {
 
     private var binding: FragmentAddBinding? = null
     private var urlChangedListener: UrlChangedListener? = null
+
+    private val noteViewModel: NoteViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +44,8 @@ class AddFragment: Fragment() {
                 val description = binding.descriptionEdit.text.toString()
                 val imageUrl = binding.imageUrlEdit.text.toString()
 
-                (requireActivity() as MainActivity).addNote(title, description, imageUrl)
+                noteViewModel.addNote(title, description, imageUrl)
+                parentFragmentManager.popBackStack()
             }
         }
     }

@@ -76,6 +76,16 @@ dependencies {
 
     // Activity KTX (for by viewModels())
     implementation(libs.androidx.activity.ktx)
+    // Fragment KTX (for by viewModels())
+    implementation(libs.fragment.ktx)
+
+    //dataStore (sharedPrefs doesn't use deps)
+    implementation(libs.androidx.datastore.preferences)
+
+    // room
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -21,4 +21,7 @@ interface MockApiService {
 
     @POST("notes")
     suspend fun createPost(@Body createdNote: NoteDetailModel): Note?
+
+    @POST("notes")
+    suspend fun createPost(@Body createdNote: Note): Note?
 }
