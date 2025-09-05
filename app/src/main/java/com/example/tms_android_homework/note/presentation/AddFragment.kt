@@ -5,20 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.setFragmentResult
 import com.bumptech.glide.Glide
 import com.example.tms_android_homework.R
 import com.example.tms_android_homework.databinding.FragmentAddBinding
 import com.example.tms_android_homework.note.presentation.listeners.UrlChangedListener
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class AddFragment: Fragment() {
 
     private var binding: FragmentAddBinding? = null
     private var urlChangedListener: UrlChangedListener? = null
-
-    private val noteViewModel: NoteViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,11 +36,11 @@ class AddFragment: Fragment() {
             binding.imageUrlEdit.addTextChangedListener(urlChangedListener)
 
             binding.saveNoteBtn.setOnClickListener {
-                val title = binding.titleEdit.text.toString()
-                val description = binding.descriptionEdit.text.toString()
-                val imageUrl = binding.imageUrlEdit.text.toString()
-
-                noteViewModel.addNote(title, description, imageUrl)
+                setFragmentResult("NOTE", Bundle().apply {
+                    putString("TITLE", binding.titleEdit.text.toString())
+                    putString("DESCRIPTION", binding.descriptionEdit.text.toString())
+                    putString("IMAGE_URL", binding.imageUrlEdit.text.toString())
+                })
                 parentFragmentManager.popBackStack()
             }
         }

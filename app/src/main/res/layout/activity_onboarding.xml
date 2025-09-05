@@ -10,15 +10,17 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="Этот экран пояляется только в первый раз"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:text="@string/first_launch_text"
         android:gravity="center" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLetsStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Перейти к списку записей" />
+        android:layout_margin="@dimen/small_margin"
+        android:textAllCaps="false"
+        android:text="@string/go_to_notes_btn_text"
+        android:background="@drawable/btn_background"/>
 
 </LinearLayout>

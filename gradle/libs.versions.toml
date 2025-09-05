@@ -1,5 +1,6 @@
 [versions]
 agp = "8.11.1"
+animatoo = "1.0.1"
 datastorePreferences = "1.1.7"
 fragmentKtx = "1.8.9"
 glide = "4.16.0"
@@ -15,12 +16,14 @@ appcompat = "1.7.1"
 leakcanaryAndroid = "2.14"
 lifecycleViewmodelKtx = "2.9.2"
 loggingInterceptor = "5.1.0"
+lottieCompose = "6.6.7"
 material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
 databindingRuntime = "8.12.1"
 navigationFragmentKtx = "2.9.3"
 navigationUiKtx = "2.9.3"
+navigationUiKtxVersion = "2.9.1"
 retrofit = "3.0.0"
 roomRuntime = "2.7.2"
 
@@ -32,9 +35,11 @@ androidx-fragment-ktx = { module = "androidx.activity:fragment-ktx", version.ref
 androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigationFragment" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-navigation-ui-ktx-v291 = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtxVersion" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+animatoo = { module = "com.github.AtifSayings:Animatoo", version.ref = "animatoo" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
@@ -49,6 +54,7 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }

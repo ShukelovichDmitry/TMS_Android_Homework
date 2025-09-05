@@ -16,7 +16,7 @@ class NoteRepositoryImpl @Inject constructor(
     private val noteDAO: NoteDAO
 ): NoteRepository {
 
-    override suspend fun getNotes(): List<Note>? =
+    override suspend fun getNotes(): List<Note> =
         withContext(Dispatchers.IO) {
             try {
                 if (noteDAO.getNotesSize() == 0) {

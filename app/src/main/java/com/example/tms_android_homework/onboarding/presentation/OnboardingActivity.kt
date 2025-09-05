@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.example.tms_android_homework.databinding.ActivityOnboardingBinding
 import com.example.tms_android_homework.note.presentation.MainActivity
 import dagger.hilt.android.AndroidEntryPoint

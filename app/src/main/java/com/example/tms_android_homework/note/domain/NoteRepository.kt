@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
     suspend fun addNote(newNote: NoteDetailModel): Note?
-    suspend fun getNotes(): List<Note>?
+    suspend fun getNotes(): List<Note>
     suspend fun editNote(id: String, note: NoteDetailModel): Note?
     suspend fun deleteNote(id: String): Boolean
     //Загрузить данные на сервер
