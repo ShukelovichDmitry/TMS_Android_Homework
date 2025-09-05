@@ -1,17 +1,21 @@
 package com.example.tms_android_homework.note.presentation
 
+import android.animation.ObjectAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnRepeat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.tms_android_homework.R
-import com.example.tms_android_homework.note.data.Note
 import com.example.tms_android_homework.databinding.ItemRowBinding
+import com.example.tms_android_homework.note.data.Note
 import com.example.tms_android_homework.note.presentation.listeners.DeleteNoteClickListener
 import com.example.tms_android_homework.note.presentation.listeners.SaveNoteClickListener
 import com.example.tms_android_homework.note.presentation.listeners.UrlChangedListener
+
 
 class NoteAdapter(
     saveNoteClickListener: SaveNoteClickListener,
@@ -28,18 +32,44 @@ class NoteAdapter(
 
         private var urlChangedListener: UrlChangedListener? = UrlChangedListener(binding.imageView)
 
-        fun editBtnClicked(note: Note) {
-            binding.viewLayout.visibility = View.GONE
-            binding.editLayout.visibility = View.VISIBLE
+        private fun changeModeAnimation(enableEdit: Boolean) {
 
+            ObjectAnimator.ofFloat(binding.root, "scaleX", 1f, 0f).apply {
+                duration = 500
+                repeatCount = 1
+                repeatMode = ObjectAnimator.REVERSE
+
+                doOnRepeat {
+                    if (enableEdit) {
+                        binding.viewLayout.visibility = View.GONE
+                        binding.editLayout.visibility = View.VISIBLE
+                    } else {
+                        binding.viewLayout.visibility = View.VISIBLE
+                        binding.editLayout.visibility = View.GONE
+                    }
+                }
+            }.start()
+        }
+
+        private fun deleteBtnClicked(id: String) {
+            ObjectAnimator.ofFloat(binding.root, "alpha", 1f, 0f).apply {
+                duration = 500
+                doOnEnd {
+                    deleteNoteBtnClicked?.onClick(id)
+                }
+            }.start()
+        }
+
+        fun editBtnClicked(note: Note) {
             binding.titleEdit.setText(note.title)
             binding.descriptionEdit.setText(note.description)
             binding.imageUrlEdit.setText(note.imageUrl)
+
+            changeModeAnimation(true)
         }
 
         fun saveBtnClicked(note: Note) {
-            binding.viewLayout.visibility = View.VISIBLE
-            binding.editLayout.visibility = View.GONE
+            changeModeAnimation(false)
 
             saveNoteBtnClicked?.onClick(note.id,
                 binding.titleEdit.text.toString(),
@@ -49,8 +79,7 @@ class NoteAdapter(
         }
 
         fun cancelBtnClicked() {
-            binding.viewLayout.visibility = View.VISIBLE
-            binding.editLayout.visibility = View.GONE
+            changeModeAnimation(false)
         }
 
         fun bind(note: Note) {
@@ -74,7 +103,7 @@ class NoteAdapter(
                 cancelBtnClicked()
             }
             binding.deleteNoteBtn.setOnClickListener {
-                deleteNoteBtnClicked?.onClick(note.id)
+                deleteBtnClicked(note.id)
             }
         }
 
