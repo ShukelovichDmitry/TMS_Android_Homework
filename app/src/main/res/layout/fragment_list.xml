@@ -1,39 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:layout_alignParentTop="true"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/fabAdd"
+            android:text="@string/add_note_btn_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_margin="16dp"
-            android:src="@android:drawable/ic_input_add"/>
+            android:textAllCaps="false"
+            android:layout_margin="@dimen/small_margin"
+            android:background="@drawable/btn_background"/>
 
-
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/fabSync"
-            android:text="Синхронизировать данные с сервером"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:text="@string/sync_btn_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:layout_margin="@dimen/small_margin"
+            android:background="@drawable/btn_background"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/goToRates"
-            android:text="Перейти к НБРБ"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:text="@string/go_to_nbrb_btn_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:layout_margin="@dimen/small_margin"
+            android:background="@drawable/btn_background" />
     </LinearLayout>
 </LinearLayout>

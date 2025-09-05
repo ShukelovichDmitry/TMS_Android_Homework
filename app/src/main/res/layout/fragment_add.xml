@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:padding="16dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/titleEdit"
-        android:hint="Название"
+        android:hint="@string/title_hint"
         android:imeOptions="flagForceAscii"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,13 +14,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/image_side_len"
+        android:layout_height="@dimen/image_side_len"
         />
 
     <EditText
         android:id="@+id/imageUrlEdit"
-        android:hint="Ссылка на изображение"
+        android:hint="@string/image_url_hint"
         android:imeOptions="flagForceAscii"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,20 +28,22 @@
 
     <EditText
         android:id="@+id/descriptionEdit"
-        android:hint="Описание"
+        android:hint="@string/description_hint"
         android:imeOptions="flagForceAscii"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:inputType="textMultiLine"
         android:gravity="top"
-        android:layout_marginTop="12dp" />
+        android:layout_marginTop="@dimen/small_margin"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/saveNoteBtn"
-        android:text="Сохранить"
+        android:text="@string/save_btn_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="end"/>
+        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_gravity="end"
+        android:background="@drawable/btn_background"/>
 </LinearLayout>

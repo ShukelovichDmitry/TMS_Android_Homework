@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TMS_Android_Homework</string>
+    <string name="data_is_received">Данные получены</string>
+    <string name="new_note_is_added_in_db">Новая запись создана в Базе Данных</string>
+    <string name="new_note_is_added_in_server">Новая запись создана на сервере</string>
+    <string name="note_is_updated_in_db">Запись обновлена в Базе Данных</string>
+    <string name="note_is_updated_in_server">Запись обновлена на сервере</string>
+    <string name="note_is_deleted_in_db">Запись удалена из Базы Данных</string>
+    <string name="note_is_deleted_in_server">Запись удалена с сервера</string>
+    <string name="notes_synced">Записи из БД загружены на сервер</string>
+    <string name="notes_not_synced">Не удалось загрузить записи из БД на сервер</string>
+    <string name="first_launch_text">Этот экран пояляется только в первый раз</string>
+    <string name="go_to_notes_btn_text">Перейти к списку записей</string>
+    <string name="title_hint">Заголовок</string>
+    <string name="image_url_hint">Ссылка на изображение</string>
+    <string name="description_hint">Описание</string>
+    <string name="save_btn_text">Сохранить</string>
+    <string name="sync_btn_text">Синхронизировать данные с сервером</string>
+    <string name="go_to_nbrb_btn_text">Перейти к НБРБ</string>
+    <string name="add_note_btn_text">Добавить запись</string>
+</resources>

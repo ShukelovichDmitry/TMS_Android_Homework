@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">TMS_Android_Homework</string>
+    <string name="data_is_received">Data is received</string>
+    <string name="new_note_is_added_in_db">New note is added in database</string>
+    <string name="new_note_is_added_in_server">New note is added in server</string>
+    <string name="note_is_updated_in_db">Note is updated in database</string>
+    <string name="note_is_updated_in_server">Note is updated in server</string>
+    <string name="note_is_deleted_in_db">Note is deleted in database</string>
+    <string name="note_is_deleted_in_server">Note is deleted in server</string>
+    <string name="notes_synced">Notes is synced with server</string>
+    <string name="notes_not_synced">Can not synced notes with server</string>
+    <string name="first_launch_text">This screen will appear only in first launch</string>
+    <string name="go_to_notes_btn_text">Go to notes</string>
+    <string name="title_hint">Title</string>
+    <string name="image_url_hint">Image URL</string>
+    <string name="description_hint">Description</string>
+    <string name="save_btn_text">Save</string>
+    <string name="sync_btn_text">Sync data with server</string>
+    <string name="go_to_nbrb_btn_text">Go to NBRB</string>
+    <string name="add_note_btn_text">Add Note</string>
 </resources>
