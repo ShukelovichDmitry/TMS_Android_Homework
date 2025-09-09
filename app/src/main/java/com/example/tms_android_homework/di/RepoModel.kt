@@ -8,12 +8,9 @@ import com.example.tms_android_homework.onboarding.data.OnboardingRepositoryImpl
 import com.example.tms_android_homework.onboarding.domain.OnboardingRepository
 import dagger.Binds
 import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 abstract class RepoModel {
     @Binds
     @Singleton

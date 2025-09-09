@@ -3,22 +3,20 @@ package com.example.tms_android_homework.note.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tms_android_homework.R
+import com.example.tms_android_homework.di.FeatureScope
 import com.example.tms_android_homework.note.data.Note
 import com.example.tms_android_homework.note.domain.usecase.AddNoteUseCase
 import com.example.tms_android_homework.note.domain.usecase.DeleteNoteUseCase
 import com.example.tms_android_homework.note.domain.usecase.EditNoteUseCase
 import com.example.tms_android_homework.note.domain.usecase.GetNotesUseCase
 import com.example.tms_android_homework.note.domain.usecase.SyncUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+@FeatureScope
 class NoteViewModel @Inject constructor(
     private val addNote: AddNoteUseCase,
     private val editNote: EditNoteUseCase,

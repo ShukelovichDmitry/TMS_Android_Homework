@@ -8,20 +8,23 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tms_android_homework.App
 import com.example.tms_android_homework.R
 import com.example.tms_android_homework.databinding.FragmentListBinding
 import com.example.tms_android_homework.nbrb.presentation.NbrbFragment
 import com.example.tms_android_homework.note.presentation.listeners.DeleteNoteClickListener
 import com.example.tms_android_homework.note.presentation.listeners.SaveNoteClickListener
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class ListFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val noteViewModel: NoteViewModel by viewModels()
+    private val noteViewModel: NoteViewModel by viewModels {viewModelFactory}
     private var binding: FragmentListBinding? = null
 
     override fun onCreateView(
@@ -32,6 +35,7 @@ class ListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (requireActivity().application as App).provideAppComponent().inject(this)
 
         binding?.let { binding ->
 

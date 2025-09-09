@@ -7,15 +7,11 @@ import com.example.tms_android_homework.note.data.db.NoteDatabase
 import com.example.tms_android_homework.onboarding.data.DataStoreManager
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(SingletonComponent::class)
 class DatabaseModule {
     @Provides
-    fun provideAppDatabase(@ApplicationContext context: Context): NoteDatabase {
+    fun provideAppDatabase(context: Context): NoteDatabase {
         return Room.databaseBuilder(
             context.applicationContext,
             NoteDatabase::class.java,
@@ -29,7 +25,7 @@ class DatabaseModule {
     }
 
     @Provides
-    fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
+    fun provideDataStoreManager(context: Context): DataStoreManager {
         return DataStoreManager(context)
     }
 }

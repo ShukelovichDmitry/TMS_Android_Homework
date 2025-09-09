@@ -2,9 +2,9 @@ package com.example.tms_android_homework.onboarding.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tms_android_homework.di.FeatureScope
 import com.example.tms_android_homework.onboarding.domain.usecase.CheckUserSawOnboardingUseCase
 import com.example.tms_android_homework.onboarding.domain.usecase.SetUserSawOnboardingUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+@FeatureScope
 class OnboardingViewModel @Inject constructor(
     private val setUserSawOnboardingUseCase: SetUserSawOnboardingUseCase,
     private val checkUserSawOnboarding: CheckUserSawOnboardingUseCase

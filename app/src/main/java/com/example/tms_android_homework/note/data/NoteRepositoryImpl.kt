@@ -5,9 +5,6 @@ import com.example.tms_android_homework.note.data.db.NoteEntity
 import com.example.tms_android_homework.note.domain.NoteRepository
 import com.example.tms_android_homework.note.domain.models.NoteDetailModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
