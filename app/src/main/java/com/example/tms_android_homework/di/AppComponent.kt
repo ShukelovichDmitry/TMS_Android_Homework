@@ -3,7 +3,6 @@ import com.example.tms_android_homework.nbrb.presentation.NbrbFragment
 import com.example.tms_android_homework.note.presentation.ListFragment
 import com.example.tms_android_homework.onboarding.presentation.OnboardingActivity
 import dagger.Component
-import javax.inject.Singleton
 
 @Component(
     modules = [
@@ -14,7 +13,6 @@ import javax.inject.Singleton
         ViewModelModule::class
     ]
 )
-@Singleton
 @FeatureScope
 interface AppComponent {
     fun inject(nbrbFragment: NbrbFragment)

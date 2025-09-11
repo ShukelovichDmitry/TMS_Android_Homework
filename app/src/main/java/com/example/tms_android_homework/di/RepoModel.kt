@@ -8,24 +8,23 @@ import com.example.tms_android_homework.onboarding.data.OnboardingRepositoryImpl
 import com.example.tms_android_homework.onboarding.domain.OnboardingRepository
 import dagger.Binds
 import dagger.Module
-import javax.inject.Singleton
 
 @Module
 abstract class RepoModel {
     @Binds
-    @Singleton
+    @FeatureScope
     abstract fun bindNoteRepository(
         noteRepositoryImpl: NoteRepositoryImpl
     ): NoteRepository
 
     @Binds
-    @Singleton
+    @FeatureScope
     abstract fun bindNbrbRepository(
         nbrbRepositoryImpl: NbrbRepositoryImpl
     ): NbrbRepository
 
     @Binds
-    @Singleton
+    @FeatureScope
     abstract fun bindOnboardingRepository(
         onboardingRepositoryImpl: OnboardingRepositoryImpl
     ): OnboardingRepository

@@ -10,13 +10,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 class NetworkModel {
 
     @Provides
-    @Singleton
+    @FeatureScope
     fun provideLoggerIntercepter(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
@@ -24,7 +23,7 @@ class NetworkModel {
     }
 
     @Provides
-    @Singleton
+    @FeatureScope
     fun provideOkHttpClient(
         loggerIntercepter: HttpLoggingInterceptor
     ): OkHttpClient {
@@ -35,7 +34,7 @@ class NetworkModel {
     }
 
     @Provides
-    @Singleton
+    @FeatureScope
     @Named("mockapi")
     fun provideMockRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder() //the baseUrl should end with /
@@ -46,13 +45,13 @@ class NetworkModel {
     }
 
     @Provides
-    @Singleton
+    @FeatureScope
     fun provideMockApiService(@Named("mockapi") retrofit: Retrofit): MockApiService {
         return retrofit.create(MockApiService::class.java)
     }
 
     @Provides
-    @Singleton
+    @FeatureScope
     @Named("nbrb")
     fun provideNbrbRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder() //the baseUrl should end with /
@@ -63,7 +62,7 @@ class NetworkModel {
     }
 
     @Provides
-    @Singleton
+    @FeatureScope
     fun provideNbrbApiService(@Named("nbrb") retrofit: Retrofit): NbrbApiService {
         return retrofit.create(NbrbApiService::class.java)
     }
