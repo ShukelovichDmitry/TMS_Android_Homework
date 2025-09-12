@@ -19,4 +19,8 @@
     <string name="sync_btn_text">Синхронизировать данные с сервером</string>
     <string name="go_to_nbrb_btn_text">Перейти к НБРБ</string>
     <string name="add_note_btn_text">Добавить запись</string>
+    <string name="power_connected">Зарядка подключена</string>
+    <string name="power_disconnected">Зарядка отключена</string>
+    <string name="notification_title">Идёт зарядка</string>
+    <string name="notification_text">Уведомление отображается пока идёт зарядка</string>
 </resources>

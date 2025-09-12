@@ -18,4 +18,8 @@
     <string name="sync_btn_text">Sync data with server</string>
     <string name="go_to_nbrb_btn_text">Go to NBRB</string>
     <string name="add_note_btn_text">Add Note</string>
+    <string name="power_connected">Power connected</string>
+    <string name="power_disconnected">Power disconnected</string>
+    <string name="notification_title">Charging in process</string>
+    <string name="notification_text">Notification is shown while charging</string>
 </resources>

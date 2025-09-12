@@ -1,5 +1,6 @@
 package com.example.tms_android_homework.note.data
 
+import com.example.tms_android_homework.background.presentation.InternetConnectionManager
 import com.example.tms_android_homework.note.data.db.NoteDAO
 import com.example.tms_android_homework.note.data.db.NoteEntity
 import com.example.tms_android_homework.note.domain.NoteRepository
@@ -10,13 +11,14 @@ import javax.inject.Inject
 
 class NoteRepositoryImpl @Inject constructor(
     private val apiService: MockApiService,
-    private val noteDAO: NoteDAO
+    private val noteDAO: NoteDAO,
+    private val connectionManager: InternetConnectionManager
 ): NoteRepository {
 
     override suspend fun getNotes(): List<Note> =
         withContext(Dispatchers.IO) {
             try {
-                if (noteDAO.getNotesSize() == 0) {
+                if (noteDAO.getNotesSize() == 0 && connectionManager.isOnline()) {
                     val apiNotes = apiService.fetchNotes()
                     val noteEntities = apiNotes?.map { apiNote ->
                         NoteEntity(
@@ -52,8 +54,10 @@ class NoteRepositoryImpl @Inject constructor(
             var createdNote: Note? = null
             var newId = (noteDAO.getNotesSize() + 1).toString()
             try {
-                createdNote = apiService.createPost(newNote)
-                createdNote?.let { newId = it.id }
+                if (connectionManager.isOnline()) {
+                    createdNote = apiService.createPost(newNote)
+                    createdNote?.let { newId = it.id }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -75,7 +79,9 @@ class NoteRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             var updatedNote: Note? = null
             try {
-                updatedNote = apiService.updateNote(id, note)
+                if (connectionManager.isOnline()) {
+                    updatedNote = apiService.updateNote(id, note)
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -97,7 +103,9 @@ class NoteRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             var result = false
             try {
-                result = apiService.deleteNote(id).isSuccessful
+                if (connectionManager.isOnline()) {
+                    result = apiService.deleteNote(id).isSuccessful
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -124,6 +132,10 @@ class NoteRepositoryImpl @Inject constructor(
     //Загрузить данные на сервер
     override suspend fun sync(): Boolean =
         withContext(Dispatchers.IO) {
+
+            if (!connectionManager.isOnline())
+                return@withContext false
+
             val forUpdate = mutableListOf<NoteEntity>()
             val forDelete = mutableListOf<String>()
 
