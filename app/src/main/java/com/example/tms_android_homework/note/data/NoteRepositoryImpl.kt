@@ -61,30 +61,20 @@ class NoteRepositoryImpl @Inject constructor(
     }
 
     override fun addNote(newNote: NoteDetailModel): Single<Note> {
+        var isNotCreatedOnServer = true
 
         return apiService.createPost(newNote)
             .subscribeOn(Schedulers.io())
-            .doOnSuccess { apiNote ->
-                noteDAO.insert(
-                    NoteEntity(
-                        id = apiNote.id,
-                        title = apiNote.title,
-                        description = apiNote.description,
-                        imageUrl = apiNote.imageUrl,
-                        isNew = false,
-                        isUpdated = false,
-                        isDeleted = false
-                    )
-                )
-            }
             .doOnError {
+                isNotCreatedOnServer = true
+            }.doFinally {
                 noteDAO.insert(
                     NoteEntity(
                         id = noteDAO.getNotesLastId().toString(),
                         title = newNote.title,
                         description = newNote.description,
                         imageUrl = newNote.imageUrl,
-                        isNew = true,
+                        isNew = isNotCreatedOnServer,
                         isUpdated = false,
                         isDeleted = false
                     )
@@ -93,9 +83,12 @@ class NoteRepositoryImpl @Inject constructor(
     }
 
     override fun editNote(id: String, note: NoteDetailModel): Single<Note> {
+        var isNotUpdatedOnServer = false
         return apiService.updateNote(id, note)
             .subscribeOn(Schedulers.io())
             .doOnError {
+                isNotUpdatedOnServer = true
+            }.doFinally {
                 noteDAO.updateEntity(
                     NoteEntity(
                         id = id,
@@ -103,19 +96,7 @@ class NoteRepositoryImpl @Inject constructor(
                         description = note.description,
                         imageUrl = note.imageUrl,
                         isNew = false,
-                        isUpdated = true,
-                        isDeleted = false
-                    )
-                )
-            }.doOnSuccess {
-                noteDAO.updateEntity(
-                    NoteEntity(
-                        id = id,
-                        title = note.title,
-                        description = note.description,
-                        imageUrl = note.imageUrl,
-                        isNew = false,
-                        isUpdated = false,
+                        isUpdated = isNotUpdatedOnServer,
                         isDeleted = false
                     )
                 )
@@ -195,6 +176,7 @@ class NoteRepositoryImpl @Inject constructor(
                 }
             }
     }
+
 }
 
 
