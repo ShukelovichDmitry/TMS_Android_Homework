@@ -49,6 +49,13 @@ dependencies {
 
     implementation(libs.leakcanary.android)
 
+    //rxJava
+    implementation(libs.rxjava)
+    implementation(libs.rxandroid)
+    implementation(libs.adapter.rxjava3)
+    implementation(libs.androidx.room.rxjava3)
+    implementation(libs.kotlinx.coroutines.rx3)
+
     //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)

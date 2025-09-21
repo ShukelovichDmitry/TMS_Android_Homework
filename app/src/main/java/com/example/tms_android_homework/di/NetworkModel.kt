@@ -9,6 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Named
@@ -44,6 +45,7 @@ class NetworkModel {
         return Retrofit.Builder() //the baseUrl should end with /
             .baseUrl("https://689f0e323fed484cf878e4c7.mockapi.io/")
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(okHttpClient)
             .build()
     }
@@ -61,6 +63,7 @@ class NetworkModel {
         return Retrofit.Builder() //the baseUrl should end with /
             .baseUrl("https://api.nbrb.by/exrates/")
             .addConverterFactory(ScalarsConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .client(okHttpClient)
             .build()
     }

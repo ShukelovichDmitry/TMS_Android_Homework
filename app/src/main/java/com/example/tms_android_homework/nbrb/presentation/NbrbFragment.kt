@@ -27,11 +27,9 @@ class NbrbFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         nbrbViewModel.getRates()
-        lifecycleScope.launch {
-            nbrbViewModel.rateJSON.collect { json ->
-                binding?.ratesText?.text = json
-            }
-        }
+        nbrbViewModel.rateJSON.observe(requireActivity(), { json ->
+            binding?.ratesText?.text = json
+        })
     }
 
     override fun onDestroy() {

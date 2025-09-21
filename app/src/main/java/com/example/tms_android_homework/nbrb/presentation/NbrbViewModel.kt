@@ -1,18 +1,11 @@
 package com.example.tms_android_homework.nbrb.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.tms_android_homework.nbrb.domain.usecase.GetRatesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,18 +13,20 @@ class NbrbViewModel @Inject constructor(
     private val getRates: GetRatesUseCase
 ): ViewModel() {
 
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        println("Возникло исключение в NbrbViewModel. $exception")
-    }
+    private val _rateJSON = MutableLiveData<String>()
+    val rateJSON: LiveData<String> = _rateJSON
 
-    private val _rateJSON = MutableStateFlow("")
-    val rateJSON = _rateJSON.asStateFlow()
+    private val compositeDisposable = CompositeDisposable()
 
     fun getRates() {
-        viewModelScope.launch(coroutineExceptionHandler) {
-            getRates.invoke()?.let { json ->
-                _rateJSON.emit(json)
-            }
+        val disposable = getRates.invoke().subscribe { json ->
+            _rateJSON.value = json
         }
+        compositeDisposable.add(disposable)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
     }
 }

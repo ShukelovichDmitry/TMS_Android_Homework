@@ -1,6 +1,8 @@
 package com.example.tms_android_homework.note.data
 
 import com.example.tms_android_homework.note.domain.models.NoteDetailModel
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -11,17 +13,17 @@ import retrofit2.http.Path
 
 interface MockApiService {
     @GET("notes")
-    suspend fun fetchNotes(): List<Note>?
+    fun fetchNotes(): Single<List<Note>>
 
     @DELETE("notes/{id}")
-    suspend fun deleteNote(@Path("id") noteId: String): Response<Unit>
+    fun deleteNote(@Path("id") noteId: String): Single<Response<Unit>>
 
     @PUT("notes/{id}")
-    suspend fun updateNote(@Path("id") noteId: String, @Body updatedNote: NoteDetailModel): Note?
+    fun updateNote(@Path("id") noteId: String, @Body updatedNote: NoteDetailModel): Single<Note>
 
     @POST("notes")
-    suspend fun createPost(@Body createdNote: NoteDetailModel): Note?
+    fun createPost(@Body createdNote: NoteDetailModel): Single<Note>
 
     @POST("notes")
-    suspend fun createPost(@Body createdNote: Note): Note?
+    fun createPost(@Body createdNote: Note): Single<Note>
 }

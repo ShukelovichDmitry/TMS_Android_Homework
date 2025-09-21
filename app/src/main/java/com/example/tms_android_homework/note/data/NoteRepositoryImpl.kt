@@ -4,11 +4,12 @@ import com.example.tms_android_homework.note.data.db.NoteDAO
 import com.example.tms_android_homework.note.data.db.NoteEntity
 import com.example.tms_android_homework.note.domain.NoteRepository
 import com.example.tms_android_homework.note.domain.models.NoteDetailModel
-import kotlinx.coroutines.Dispatchers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.asFlow
 import javax.inject.Inject
 
 class NoteRepositoryImpl @Inject constructor(
@@ -16,165 +17,184 @@ class NoteRepositoryImpl @Inject constructor(
     private val noteDAO: NoteDAO
 ): NoteRepository {
 
-    override suspend fun getNotes(): List<Note> =
-        withContext(Dispatchers.IO) {
-            try {
-                if (noteDAO.getNotesSize() == 0) {
-                    val apiNotes = apiService.fetchNotes()
-                    val noteEntities = apiNotes?.map { apiNote ->
-                        NoteEntity(
-                            id = apiNote.id,
-                            title = apiNote.title,
-                            description = apiNote.description,
-                            imageUrl = apiNote.imageUrl,
-                            isNew = false,
-                            isUpdated = false,
-                            isDeleted = false
-                        )
-                    }
-                    noteEntities?.let {
-                        noteDAO.insertAll(noteEntities)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+    private fun loadNotesFromServer(): Single<List<Note>> {
+        return apiService.fetchNotes()
+            .subscribeOn(Schedulers.io())
+            .doOnSuccess { apiNoteList ->
+                noteDAO.insertAll(apiNoteList.map { apiNote ->
+                    NoteEntity(
+                        id = apiNote.id,
+                        title = apiNote.title,
+                        description = apiNote.description,
+                        imageUrl = apiNote.imageUrl,
+                        isNew = false,
+                        isUpdated = false,
+                        isDeleted = false
+                    )
+                })
+            }.onErrorReturn { emptyList() }
+    }
 
-            noteDAO.getAllEntities()?.map { entity ->
-                Note(
-                    id = entity.id,
-                    title = entity.title,
-                    description = entity.description,
-                    imageUrl = entity.imageUrl
-                )
-            }.orEmpty()
-        }
 
-    override suspend fun addNote(newNote: NoteDetailModel): Note? =
-        withContext(Dispatchers.IO) {
-            var createdNote: Note? = null
-            var newId = (noteDAO.getNotesSize() + 1).toString()
-            try {
-                createdNote = apiService.createPost(newNote)
-                createdNote?.let { newId = it.id }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            noteDAO.insert(
-                NoteEntity(
-                    id = newId,
-                    title = newNote.title,
-                    description = newNote.description,
-                    imageUrl = newNote.imageUrl,
-                    isNew = createdNote == null,
-                    isUpdated = false,
-                    isDeleted = false
-                )
-            )
-            createdNote
-        }
-
-    override suspend fun editNote(id: String, note: NoteDetailModel): Note? =
-        withContext(Dispatchers.IO) {
-            var updatedNote: Note? = null
-            try {
-                updatedNote = apiService.updateNote(id, note)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            noteDAO.updateEntity(
-                NoteEntity(
-                    id = id,
-                    title = note.title,
-                    description = note.description,
-                    imageUrl = note.imageUrl,
-                    isNew = false,
-                    isUpdated = updatedNote == null,
-                    isDeleted = false
-                )
-            )
-            updatedNote
-        }
-
-    override suspend fun deleteNote(id: String): Boolean =
-        withContext(Dispatchers.IO) {
-            var result = false
-            try {
-                result = apiService.deleteNote(id).isSuccessful
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            if (result) {
-                noteDAO.deleteEntity(id)
-            } else {
-                noteDAO.getNote(id)?.let { note ->
-                    noteDAO.updateEntity(
-                        NoteEntity(
-                            id = id,
-                            title = note.title,
-                            description = note.description,
-                            imageUrl = note.imageUrl,
-                            isNew = false,
-                            isUpdated = false,
-                            isDeleted = true
-                        )
+    private fun getNotesFromDB(): Flowable<List<Note>> {
+        return noteDAO.getAllEntities()
+            .subscribeOn(Schedulers.io())
+            .map { dbNotes ->
+                dbNotes.map { dbNote ->
+                    Note(
+                        id = dbNote.id,
+                        title = dbNote.title,
+                        description = dbNote.description,
+                        imageUrl = dbNote.imageUrl
                     )
                 }
             }
-            result
-        }
+    }
+
+
+    override fun getNotes(): Flowable<List<Note>> {
+        return getNotesFromDB()
+            .flatMap { dbNoteList ->
+                if (dbNoteList.isEmpty()) loadNotesFromServer().toFlowable()
+                else Flowable.just(dbNoteList)
+            }
+    }
+
+    override fun addNote(newNote: NoteDetailModel): Single<Note> {
+
+        return apiService.createPost(newNote)
+            .subscribeOn(Schedulers.io())
+            .doOnSuccess { apiNote ->
+                noteDAO.insert(
+                    NoteEntity(
+                        id = apiNote.id,
+                        title = apiNote.title,
+                        description = apiNote.description,
+                        imageUrl = apiNote.imageUrl,
+                        isNew = false,
+                        isUpdated = false,
+                        isDeleted = false
+                    )
+                )
+            }
+            .doOnError {
+                noteDAO.insert(
+                    NoteEntity(
+                        id = noteDAO.getNotesLastId().toString(),
+                        title = newNote.title,
+                        description = newNote.description,
+                        imageUrl = newNote.imageUrl,
+                        isNew = true,
+                        isUpdated = false,
+                        isDeleted = false
+                    )
+                )
+            }
+    }
+
+    override fun editNote(id: String, note: NoteDetailModel): Single<Note> {
+        return apiService.updateNote(id, note)
+            .subscribeOn(Schedulers.io())
+            .doOnError {
+                noteDAO.updateEntity(
+                    NoteEntity(
+                        id = id,
+                        title = note.title,
+                        description = note.description,
+                        imageUrl = note.imageUrl,
+                        isNew = false,
+                        isUpdated = true,
+                        isDeleted = false
+                    )
+                )
+            }.doOnSuccess {
+                noteDAO.updateEntity(
+                    NoteEntity(
+                        id = id,
+                        title = note.title,
+                        description = note.description,
+                        imageUrl = note.imageUrl,
+                        isNew = false,
+                        isUpdated = false,
+                        isDeleted = false
+                    )
+                )
+            }
+    }
+
+    override fun deleteNote(id: String): Single<Boolean> {
+
+        return apiService.deleteNote(id)
+            .subscribeOn(Schedulers.io())
+            .map { apiResponse -> apiResponse.isSuccessful }
+            .onErrorReturn { false }
+            .doOnSuccess { isSuccessful ->
+                if(isSuccessful)
+                    noteDAO.deleteEntity(id)
+                else
+                    noteDAO.getNote(id)?.let { note ->
+                        noteDAO.updateEntity(
+                            NoteEntity(
+                                id = id,
+                                title = note.title,
+                                description = note.description,
+                                imageUrl = note.imageUrl,
+                                isNew = false,
+                                isUpdated = false,
+                                isDeleted = true
+                            )
+                        )
+                    }
+            }
+    }
 
     //Загрузить данные на сервер
-    override suspend fun sync(): Boolean =
-        withContext(Dispatchers.IO) {
-            val forUpdate = mutableListOf<NoteEntity>()
-            val forDelete = mutableListOf<String>()
+    override fun sync(): Single<Boolean> {
+        var forUpdate = mutableListOf<String>()
+        var forDelete = mutableListOf<String>()
 
-            try {
-                noteDAO.getNewNotes()?.forEach { newNote ->
-                    apiService.createPost(
-                        Note(
-                            newNote.id,
-                            newNote.title,
-                            newNote.description,
-                            newNote.imageUrl
-                        )
-                    )?.let {
-                        newNote.isNew = false
-                        forUpdate.add(newNote)
-                    }
-                }
-                noteDAO.getUpdatedNotes()?.forEach { updatedNote ->
-                    apiService.updateNote(updatedNote.id,
-                        NoteDetailModel(
-                            updatedNote.title,
-                            updatedNote.description,
-                            updatedNote.imageUrl
-                        )
-                    )?.let {
-                        updatedNote.isUpdated = false
-                        forUpdate.add(updatedNote)
-                    }
-                }
-                noteDAO.getDeletedNotes()?.forEach { deletedNote ->
-                    apiService.deleteNote(deletedNote.id).let {
-                        if (it.isSuccessful) {
-                            forDelete.add(deletedNote.id)
-                        }
-                    }
-                }
+        return noteDAO.getNotSyncedNotes()
+            .subscribeOn(Schedulers.io())
+            .map { notSyncedNoteList ->
+                notSyncedNoteList.map { notSyncedNote ->
+                    if (notSyncedNote.isDeleted)
+                        apiService.deleteNote(notSyncedNote.id)
+                            .map { apiResponse -> apiResponse.isSuccessful }
+                            .onErrorReturn { false }
+                            .doOnSuccess {
+                                if (it) forDelete.add(notSyncedNote.id)
+                            }
+                            .blockingGet()
+                    else if (notSyncedNote.isUpdated)
+                        apiService.updateNote(notSyncedNote.id, NoteDetailModel(
+                            title = notSyncedNote.title,
+                            description = notSyncedNote.description,
+                            imageUrl = notSyncedNote.imageUrl
+                        ))
+                            .map { true }
+                            .onErrorReturn { false }
+                            .doOnSuccess { forUpdate.add(notSyncedNote.id) }
+                            .blockingGet()
+                    else
+                        apiService.createPost(Note(
+                            id = notSyncedNote.id,
+                            title = notSyncedNote.title,
+                            description = notSyncedNote.description,
+                            imageUrl = notSyncedNote.imageUrl
+                        ))
+                            .map { true }
+                            .onErrorReturn { false }
+                            .doOnSuccess { forUpdate.add(notSyncedNote.id) }
+                            .blockingGet()
 
-            } catch (e: Exception) {
-                e.printStackTrace()
-                false
+                }.reduce { acc, cur -> acc && cur }
+            }.doOnSuccess { isSynced ->
+                if (isSynced) {
+                    noteDAO.deleteEntities(forDelete)
+                    noteDAO.updateEntities(forUpdate)
+                }
             }
-
-            noteDAO.updateEntities(forUpdate)
-            noteDAO.deleteEntities(forDelete)
-
-            forUpdate.size > 0 || forDelete.size > 0
-
-        }
+    }
 }
 
 

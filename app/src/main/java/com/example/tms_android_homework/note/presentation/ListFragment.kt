@@ -52,18 +52,13 @@ class ListFragment : Fragment() {
 
             noteViewModel.getNotes()
 
-            lifecycleScope.launch {
-                noteViewModel.msg.collect { msg ->
-                    if (msg == 0) return@collect
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                }
-            }
+            noteViewModel.msg.observe(requireActivity(), { msg ->
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            })
 
-            lifecycleScope.launch {
-                noteViewModel.noteList.collect{ list ->
-                    noteAdapter.updateList(list)
-                }
-            }
+            noteViewModel.noteList.observe(requireActivity(), { list ->
+                noteAdapter.updateList(list)
+            })
 
             binding.fabAdd.setOnClickListener {
                 goToNextScreen(AddFragment())
@@ -103,4 +98,6 @@ class ListFragment : Fragment() {
         binding?.recyclerView?.adapter = null
         binding = null
     }
+
+
 }
