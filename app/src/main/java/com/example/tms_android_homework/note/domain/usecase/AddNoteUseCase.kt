@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class AddNoteUseCase @Inject constructor(private val noteRepository: NoteRepository) {
-    fun invoke(title: String, descriptor: String, imageUrl: String): Single<Note> {
-        return noteRepository.addNote(NoteDetailModel(title, descriptor, imageUrl))
+    fun invoke(title: String, description: String, imageUrl: String): Single<Note> {
+        return noteRepository.addNote(NoteDetailModel(title, description, imageUrl))
     }
 }

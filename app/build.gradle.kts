@@ -41,6 +41,31 @@ android {
 }
 
 dependencies {
+
+    testImplementation("io.mockk:mockk:1.14.6")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+
+    testImplementation("com.jraska.livedata:testing-ktx:1.3.0")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+
+    //Coroutines test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+
+    //Flow test
+    testImplementation("app.cash.turbine:turbine:1.1.0")
+
+    //Mockito
+    testImplementation("org.mockito:mockito-core:5.11.0")
+
+    //Mockito utils
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
+
+    //assert utils
+    testImplementation(kotlin("test"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

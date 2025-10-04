@@ -4,12 +4,9 @@ import com.example.tms_android_homework.note.data.db.NoteDAO
 import com.example.tms_android_homework.note.data.db.NoteEntity
 import com.example.tms_android_homework.note.domain.NoteRepository
 import com.example.tms_android_homework.note.domain.models.NoteDetailModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import javax.inject.Inject
 
 class NoteRepositoryImpl @Inject constructor(
@@ -68,9 +65,10 @@ class NoteRepositoryImpl @Inject constructor(
             .doOnError {
                 isNotCreatedOnServer = true
             }.doFinally {
+                val newId = (noteDAO.getNotesLastId() + 1).toString()
                 noteDAO.insert(
                     NoteEntity(
-                        id = noteDAO.getNotesLastId().toString(),
+                        id = newId,
                         title = newNote.title,
                         description = newNote.description,
                         imageUrl = newNote.imageUrl,
@@ -110,10 +108,10 @@ class NoteRepositoryImpl @Inject constructor(
             .map { apiResponse -> apiResponse.isSuccessful }
             .onErrorReturn { false }
             .doOnSuccess { isSuccessful ->
-                if(isSuccessful)
-                    noteDAO.deleteEntity(id)
-                else
-                    noteDAO.getNote(id)?.let { note ->
+                noteDAO.getNote(id)?.let { note ->
+                    if(isSuccessful)
+                        noteDAO.deleteEntity(id)
+                    else
                         noteDAO.updateEntity(
                             NoteEntity(
                                 id = id,
@@ -125,7 +123,7 @@ class NoteRepositoryImpl @Inject constructor(
                                 isDeleted = true
                             )
                         )
-                    }
+                }
             }
     }
 

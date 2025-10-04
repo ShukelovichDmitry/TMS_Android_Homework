@@ -15,8 +15,4 @@ class OnboardingRepositoryImpl @Inject constructor(
     override suspend fun setUserSawOnboarding() {
         dataStoreManager.setUserSawOnboarding()
     }
-
-    override suspend fun setUserSawOnboarding(wasSeen: Boolean) {
-        dataStoreManager.setUserSawOnboarding(wasSeen)
-    }
 }

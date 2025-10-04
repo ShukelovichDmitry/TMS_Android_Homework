@@ -15,4 +15,15 @@ data class NoteEntity(
     var isUpdated: Boolean,
     //Запись удалена из БД, но не удалена с сервера
     var isDeleted: Boolean
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        val otherNote = other as NoteEntity
+        return  this.id == otherNote.id &&
+                this.title.equals(otherNote.title) &&
+                this.description.equals(otherNote.description) &&
+                this.imageUrl.equals(otherNote.imageUrl) &&
+                this.isNew == otherNote.isNew &&
+                this.isUpdated == otherNote.isUpdated &&
+                this.isDeleted == otherNote.isDeleted
+    }
+}
